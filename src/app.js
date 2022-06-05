@@ -1,6 +1,6 @@
 import express from 'express';
 import routes from './router.js';
-import Database from './database/index.js';
+import './database/index.js';
 
 
 export default new class App {
