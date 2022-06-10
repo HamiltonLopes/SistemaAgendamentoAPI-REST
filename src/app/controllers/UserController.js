@@ -14,7 +14,8 @@ export default new class UserController {
     }
 
     async update(req,res){
-        console.log(req.userId);
+        const user = await User.findByPk(req.userId);
+        console.log(user.id);
         return res.json({"message": "true"});
     }
 
