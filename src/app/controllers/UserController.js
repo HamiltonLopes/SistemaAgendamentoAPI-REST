@@ -15,8 +15,34 @@ export default new class UserController {
 
     async update(req,res){
         const user = await User.findByPk(req.userId);
-        console.log(user.id);
-        return res.json({"message": "true"});
+        let {email, password, name, new_name, new_email, new_password, confirm_password} = req.body;
+
+        if(email !== user.email || !(await user.checkPassword(password)) || (name && !(name === user.name)) )
+            return res.status(401).json({error: email !== user.email ? "Email Incorreto!" : name === user.name ? "Senha Incorreta!" : "Nome Incorreto!"});
+        
+        if(new_name)
+            name = new_name;
+        
+        if(new_password)
+            if(new_password === confirm_password)
+                password = new_password;
+            else
+                return res.status(401).json({error: "Senha de confirmação não confere com nova senha!"})
+        
+        if(new_email){
+            if(await User.findOne({where: {email: new_email}}))
+                return res.status(401).json({error: "Email já cadastrado!"});
+            else
+                email = new_email;
+        }
+
+        const updatedUser = await user.update({
+            name,
+            password,
+            email
+        })
+            
+        return res.json(updatedUser);
     }
 
 }
