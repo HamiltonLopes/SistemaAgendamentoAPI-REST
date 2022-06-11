@@ -1,10 +1,19 @@
 import User from "../models/User.js";
 import jwt from 'jsonwebtoken';
 import authConfig from '../../config/auth.js';
+import * as Yup from 'yup';
 
 export default new class SessionController {
     async store(req, res) {
         const { email, password } = req.body;
+
+        const schema = Yup.object().shape({
+            email: Yup.string().email().required(),
+            password: Yup.string().required().min(3),
+        });
+
+        if (!(await schema.isValid(req.body)))
+            return res.status(401).json({ error: "Dados incompletos!" });
 
         const user = await User.findOne({ where: { email } });
 
