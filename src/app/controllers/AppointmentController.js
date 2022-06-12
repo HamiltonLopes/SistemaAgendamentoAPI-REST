@@ -40,7 +40,7 @@ export default new class AppointmentControler {
         });
 
         if (!(await schema.isValid(req.body)))
-            return res.status(401).json({ error: "Erro de Requisicao!" });
+            return res.status(401).json({ error: "Request Error!" });
 
         const { collaborator_id, date } = req.body;
         console.log(date)
@@ -48,15 +48,15 @@ export default new class AppointmentControler {
         const collaborator = await User.findByPk(collaborator_id);
 
         if (!collaborator.provider)
-            return res.status(404).json({ error: "Colaborador nao localizado!" });
+            return res.status(404).json({ error: "Collaborator not found!" });
 
         const hourStart = parseISO(date);
 
         if (isBefore(hourStart, new Date())) {
-            return res.status(400).json({ error: "A data do agendamento nao pode ser anterior a data de hoje!" });
+            return res.status(400).json({ error: "The date can't be earlier than today!" });
         }
 
-        const checkAvaliability = await Appointment.findOne({
+        const checkAvailability = await Appointment.findOne({
             where: {
                 [Op.or]: [ //retorna o appointment do colaborador ou do usuario
                     { user_id: req.userId },
@@ -70,8 +70,8 @@ export default new class AppointmentControler {
             }
         });
 
-        if (checkAvaliability) 
-            return res.status(400).json({ error: "Horario nao disponivel!" });
+        if (checkAvailability) 
+            return res.status(400).json({ error: "This time isn't available!" });
 
         const appointment = await Appointment.create({
             user_id: req.userId,

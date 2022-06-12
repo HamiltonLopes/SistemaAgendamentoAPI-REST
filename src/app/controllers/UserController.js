@@ -12,14 +12,14 @@ export default new class UserController {
         });
 
         if (!(await schema.isValid(req.body)))
-            return res.status(401).json({ error: "Dados incompletos!" });
+            return res.status(401).json({ error: "Request Error!" });
 
         const userExists = await User.findOne({
             where: { email: req.body.email }
         });
 
         if (userExists)
-            return res.status(400).json({ error: "Email já cadastrado!" });
+            return res.status(400).json({ error: "This email is already used!" });
 
         const { id, name, email, provider } = await User.create(req.body);
         return res.json({ id, name, email, provider });
@@ -41,7 +41,7 @@ export default new class UserController {
             ),
 
             password: Yup.string().min(3).when('new_password',
-                (new_password, field) => new_password ? field.required('Password é necessário!') : field
+                (new_password, field) => new_password ? field.required() : field
             ),
 
             confirm_password: Yup.string().when('password',
@@ -50,7 +50,7 @@ export default new class UserController {
         });
 
         if (!(await schema.isValid(req.body))) {
-            return res.status(401).json({ error: "Dados incompletos!" });
+            return res.status(401).json({ error: "Request Error!" });
         }
 
 
@@ -58,7 +58,7 @@ export default new class UserController {
         let { email, password, name, new_name, new_email, new_password, confirm_password, pic_id } = req.body;
 
         if ((email && (email !== user.email)) || (password && !(await user.checkPassword(password))) || (name && !(name === user.name)))
-            return res.status(401).json({ error: (email && email !== user.email) ? "Email Incorreto!" : (name && name !== user.name) ? "Nome Incorreto!" : "Senha Incorreta!" });
+            return res.status(401).json({ error: (email && email !== user.email) ? "Wrong Email!" : (name && name !== user.name) ? "Wrong Name!" : "Wrong Password!" });
 
         if (new_name)
             name = new_name;
@@ -68,7 +68,7 @@ export default new class UserController {
 
         if (new_email) {
             if (await User.findOne({ where: { email: new_email } }))
-                return res.status(401).json({ error: "Email já cadastrado!" });
+                return res.status(401).json({ error: "This email is already used!!" });
             else
                 email = new_email;
         }

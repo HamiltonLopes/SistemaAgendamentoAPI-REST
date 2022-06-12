@@ -13,7 +13,7 @@ export default new class SessionController {
         });
 
         if (!(await schema.isValid(req.body)))
-            return res.status(401).json({ error: "Dados incompletos!" });
+            return res.status(401).json({ error: "Request Error!" });
 
         const user = await User.findOne({ where: { email } });
 

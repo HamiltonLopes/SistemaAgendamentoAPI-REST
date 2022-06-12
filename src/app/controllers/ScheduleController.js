@@ -9,7 +9,7 @@ export default new class ScheduleController{
     async index(req,res){
         const user = await User.findByPk(req.userId);
         if(!user.provider)
-            return res.status(401).json({error: "Usuario nao e um colaborador!"});
+            return res.status(401).json({error: "This user isn't a collaborator!"});
         
         const {date} = req.query;
         const dateParsed = parseISO(date);
