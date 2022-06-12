@@ -30,6 +30,7 @@ export default new class UserController {
             new_name: Yup.string(),
             new_email: Yup.string().email(),
             new_password: Yup.string().min(6),
+            pic_id: Yup.number(),
 
             name: Yup.string().when('new_name',
                 (new_name, field) => new_name ? field.required() : field
@@ -54,7 +55,7 @@ export default new class UserController {
 
 
         const user = await User.findByPk(req.userId);
-        let { email, password, name, new_name, new_email, new_password, confirm_password, pic_id:Files } = req.body;
+        let { email, password, name, new_name, new_email, new_password, confirm_password, pic_id } = req.body;
 
         if ((email && (email !== user.email)) || (password && !(await user.checkPassword(password))) || (name && !(name === user.name)))
             return res.status(401).json({ error: (email && email !== user.email) ? "Email Incorreto!" : (name && name !== user.name) ? "Nome Incorreto!" : "Senha Incorreta!" });
@@ -72,19 +73,19 @@ export default new class UserController {
                 email = new_email;
         }
 
-        if(Files)
-            if (!(await File.findOne({where: {id: Files }})))
+        if(pic_id)
+            if (!(await File.findOne({where: {id: pic_id }})))
                 return res.status(404).json({ error: "File not found!" });
 
 
-        const updatedUser = await user.update({
+        let updatedUser = await user.update({
             name,
             password,
             email,
-            Files
+            pic_id
         });
 
-        return res.json({ id: updatedUser.id, name: updatedUser.name, email: updatedUser.email });
+        return res.json({ id: updatedUser.id, name: updatedUser.name, email: updatedUser.email, pic_id: user.pic_id });
     }
 
 }

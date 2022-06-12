@@ -1,9 +1,10 @@
 import Sequelize from 'sequelize';
 import User from '../app/models/User.js';
 import File from '../app/models/File.js';
+import Appointment from '../app/models/Appointment.js';
 import databaseConfig from '../config/database.js';
 
-const models = [User, File]; //Needed only on teacher version
+const models = [User, File, Appointment]; //Needed only on teacher version
 
 class Database{
     constructor(){

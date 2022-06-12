@@ -19,7 +19,7 @@ export default class User extends Model{
     }
 
     static associate(models){
-        this.belongsTo(models.File, { foreignKey: 'Files' });
+        this.belongsTo(models.File, { foreignKey: 'pic_id', as:'pic' });
     }
 
     checkPassword(password){
