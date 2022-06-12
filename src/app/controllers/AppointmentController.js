@@ -9,10 +9,14 @@ import { Op } from 'sequelize';
 export default new class AppointmentControler {
 
     async index(req, res){
+        const {page = 1, off: appointmentsPewPage = 5} = req.query;
+
         const appointmentList = await Appointment.findAll({
             where: { user_id: req.userId, canceledAt: null},
             order: ['date'],
             attributes:['id', 'date'],
+            limit: appointmentsPewPage,
+            offset: (page - 1) * appointmentsPewPage,
             include: [{
                 model: User,
                 as: 'collaborator',

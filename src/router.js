@@ -6,6 +6,7 @@ import SessionController from './app/controllers/SessionController.js';
 import FileController from './app/controllers/FileController.js';
 import CollaboratorController from './app/controllers/CollaboratorController.js';
 import AppointmentController from './app/controllers/AppointmentController.js';
+import ScheduleController from './app/controllers/ScheduleController.js';
 
 import authMiddleware from './app/middlewares/auth.js';
 
@@ -14,20 +15,22 @@ import multerConfig from './config/multer.js';
 const routes = new Router();
 const upload = multer(multerConfig);
 
-routes.post('/users', UserController.store);
-routes.post('/session', SessionController.store);
+routes.post('/users', UserController.store); //criar usuario
+routes.post('/session', SessionController.store); //login
 
 //Rotas Autenticadas
 routes.use(authMiddleware);
 
-routes.put('/users', UserController.update);
+routes.put('/users', UserController.update); //alterar usuario
 
-routes.get('/collaborators', CollaboratorController.index)
+routes.get('/collaborators', CollaboratorController.index); //listar colaboradores
 
-routes.post('/files', upload.single('file'), FileController.store);
+routes.post('/files', upload.single('file'), FileController.store); //inserir picture
 
-routes.get('/appointments', AppointmentController.index);
-routes.post('/appointments', AppointmentController.store);
+routes.get('/appointments', AppointmentController.index); //lista de appointments do usuario
+routes.post('/appointments', AppointmentController.store); //criar appointment
+
+routes.get('/schedule', ScheduleController.index); //lista de appointments do colaborador
 
 export default routes;
 
