@@ -41,6 +41,9 @@ Principais Pontos de Melhoria:
 Para utilizar o CRUD de usuários, é necessário acessar o endpoint: ```/users```
   - Para inserir, utiliza-se o método post e é obrigatório os campos: nome, email e senha no JSON.
   - Para alterar, utiliza-se o método put e é obrigatório passar o campo que deseja alterar e o novo valor dessa forma: ```new_nomedocampo``` no JSON.*
+  
+Para informar que o usuario agora é um provedor, é necessário acessar o endpoint: ```/newprovider```
+  - Para alterar, utiliza-se o método patch.*
    
 Para iniciar sessão, é necessário acessar o endpoint: ```/session```
   - Para entrar, utiliza-se o método post e é obrigatório os campos: email e senha no JSON.
