@@ -7,6 +7,7 @@ import FileController from './app/controllers/FileController.js';
 import CollaboratorController from './app/controllers/CollaboratorController.js';
 import AppointmentController from './app/controllers/AppointmentController.js';
 import ScheduleController from './app/controllers/ScheduleController.js';
+import NotificationController from './app/controllers/NotificationController.js';
 
 import authMiddleware from './app/middlewares/auth.js';
 
@@ -31,6 +32,9 @@ routes.get('/appointments', AppointmentController.index); //lista de appointment
 routes.post('/appointments', AppointmentController.store); //criar appointment
 
 routes.get('/schedule', ScheduleController.index); //lista de appointments do colaborador
+
+routes.get('/notifications', NotificationController.index); //lista notificacoes para collaborador
+routes.put('/notifications/:id', NotificationController.update); //notificação como lida
 
 export default routes;
 

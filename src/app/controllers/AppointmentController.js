@@ -1,27 +1,28 @@
 import Appointment from "../models/Appointment.js";
 import User from "../models/User.js";
 import File from "../models/File.js";
+import Notification from '../schema/Notification.js';
 
-import { parseISO, isBefore, subHours, addHours } from 'date-fns';
+import { parseISO, isBefore, subHours, addHours, format } from 'date-fns';
 import * as Yup from 'yup';
 import { Op } from 'sequelize';
 
 export default new class AppointmentControler {
 
-    async index(req, res){
-        const {page = 1, off: appointmentsPewPage = 5} = req.query;
+    async index(req, res) {
+        const { page = 1, off: appointmentsPewPage = 5 } = req.query;
 
         const appointmentList = await Appointment.findAll({
-            where: { user_id: req.userId, canceledAt: null},
+            where: { user_id: req.userId, canceledAt: null },
             order: ['date'],
-            attributes:['id', 'date'],
+            attributes: ['id', 'date'],
             limit: appointmentsPewPage,
             offset: (page - 1) * appointmentsPewPage,
             include: [{
                 model: User,
                 as: 'collaborator',
                 attributes: ['id', 'name'],
-                include:[{
+                include: [{
                     model: File,
                     as: 'pic',
                     attributes: ['name', 'url']
@@ -70,13 +71,22 @@ export default new class AppointmentControler {
             }
         });
 
-        if (checkAvailability) 
+        if (checkAvailability)
             return res.status(400).json({ error: "This time isn't available!" });
+
 
         const appointment = await Appointment.create({
             user_id: req.userId,
             collaborator_id,
             date
+        });
+
+        const user = await User.findByPk(req.userId);
+        const formatedDate = format(hourStart, "LLLL' 'dd', 'yyyy', at 'H:mm")
+
+        await Notification.create({
+            content: `New appointment for ${user.name} in ${formatedDate}`,
+            user: collaborator_id
         });
 
         return res.json(appointment);
