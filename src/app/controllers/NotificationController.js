@@ -16,6 +16,11 @@ export default new class NotificationController{
     }
 
     async update(req, res){
+        const collaborator = await User.findByPk(req.userId);
+
+        if(!(collaborator && collaborator.provider))
+            return res.status(404).json({error: "This route is only available for collaborators!"});
+
         const notifications = await Notification.findByIdAndUpdate(req.params.id, {read: true}, {new: true}); //new true faz com que o retorno da promise seja o objeto alterado.
 
         return res.json(notifications);
