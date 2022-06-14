@@ -23,6 +23,7 @@ routes.post('/session', SessionController.store); //login
 routes.use(authMiddleware);
 
 routes.put('/users', UserController.update); //alterar usuario
+routes.patch('/newprovider', UserController.newProvider); //transforma o usuario em provider
 
 routes.get('/collaborators', CollaboratorController.index); //listar colaboradores
 
@@ -35,6 +36,7 @@ routes.get('/schedule', ScheduleController.index); //lista de appointments do co
 
 routes.get('/notifications', NotificationController.index); //lista notificacoes para collaborador
 routes.put('/notifications/:id', NotificationController.update); //notificação como lida
+
 
 export default routes;
 

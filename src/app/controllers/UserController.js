@@ -88,4 +88,13 @@ export default new class UserController {
         return res.json({ id: updatedUser.id, name: updatedUser.name, email: updatedUser.email, pic_id: user.pic_id });
     }
 
+    async newProvider(req,res){
+        const user = await User.findByPk(req.userId);
+        if(user && user.provider)
+            return res.status(401).json({error: "This user is already a provider!"});
+        
+        const {id, name, email, provider} = await user.update({provider: true});
+        return res.json({id, name, email, provider});
+    }
+
 }
